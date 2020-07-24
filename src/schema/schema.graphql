@@ -1,0 +1,94 @@
+scalar DateTime
+
+enum Sort {
+  asc
+  desc
+}
+
+input EventOrderByInput {
+  name: Sort
+  datetime: Sort
+}
+
+type AuthPayload {
+  token: String
+  admin: Admin
+}
+
+type Mutation {
+  createEvent(name: String, maxAdmission: Int!, datetime: String): Event!
+  signup(email: String!, password: String!, name: String!): AuthPayload
+  login(email: String!, password: String!): AuthPayload
+}
+
+type Query {
+  events(
+    filter: String
+    skip: Int
+    take: Int
+    orderBy: EventOrderByInput
+  ): [Event!]!
+  event(id: ID!): Event
+  production(id: ID!): Production
+  productions(
+    filter: String
+    skip: Int
+    take: Int
+    orderBy: EventOrderByInput
+  ): [Production!]!
+}
+
+type Admin {
+  id: ID!
+  name: String!
+  email: String!
+}
+
+type TicketProvider {
+  id: ID!
+  name: String!
+  productions: [Production]
+}
+
+type Production {
+  id: ID!
+  name: String!
+  producer: String
+  events: [Event]
+  ticketProvider: TicketProvider
+}
+
+type Event {
+  id: ID!
+  name: String
+  production: Production!
+  venue: Venue
+  datetime: DateTime
+  seats: [Seat]
+  maxAdmission: Int
+  ticketProvider: TicketProvider
+}
+
+type Venue {
+  id: ID!
+  name: String!
+  events: [Event]
+}
+
+# The seating chart is simply a template to populate a new event's seats
+type SeatingChart {
+  id: ID!
+  name: String!
+  venue: Venue!
+  seats: [Seat]
+}
+
+# A Seat is unique to an Event
+type Seat {
+  id: ID!
+  section: String!
+  row: String!
+  number: String!
+  event: Event
+  status: String!
+}

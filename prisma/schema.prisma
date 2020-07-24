@@ -1,0 +1,101 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model admin {
+  email    String @unique
+  id       Int    @default(autoincrement()) @id
+  name     String
+  password String
+}
+
+model event {
+  id                Int             @default(autoincrement()) @id
+  name              String?
+  maxAdmission     Int? @map("max_admission")
+  datetime          DateTime?
+  venueId          Int? @map("venue_id")
+  productionId     Int? @map("production_id")
+  ticketproviderId Int? @map("ticketprovider_id")
+  production        production?     @relation(fields: [productionId], references: [id])
+  ticketprovider    ticketprovider? @relation(fields: [ticketproviderId], references: [id])
+  venue             venue?          @relation(fields: [venueId], references: [id])
+  seat              seat[]
+
+  @@index([productionId], name: "fkTbleventtblproductionidx")
+  @@index([ticketproviderId], name: "fkTbleventtblticketprovider1idx")
+  @@index([venueId], name: "fkTbleventtblvenue1idx")
+}
+
+model producer {
+  id         Int          @default(autoincrement()) @id
+  name       String?
+  production production[]
+}
+
+model production {
+  id          Int       @default(autoincrement()) @id
+  name        String?
+  producerId Int? @map("producer_id")
+  producer    producer? @relation(fields: [producerId], references: [id])
+  events       event[]
+
+  @@index([producerId], name: "fkTblproductiontblproducer2idx")
+}
+
+model seat {
+  id       Int     @default(autoincrement()) @id
+  section  String?
+  row      String?
+  number   String?
+  level    String?
+  status   Int?
+  eventId Int? @map("event_id")
+  event    event?  @relation(fields: [eventId], references: [id])
+
+  @@index([eventId], name: "fkTblseattblevent1idx")
+}
+
+model seatingchart {
+  id       Int     @default(autoincrement()) @id
+  name     String?
+  venueId Int? @map("venue_id")
+  venue    venue?  @relation(fields: [venueId], references: [id])
+
+  @@index([venueId], name: "fkTblseatingcharttblvenue1idx")
+}
+
+model ticketprovider {
+  id    Int     @default(autoincrement()) @id
+  name  String?
+  event event[]
+}
+
+model venue {
+  id           Int            @default(autoincrement()) @id
+  name         String?
+  event        event[]
+  seatingchart seatingchart[]
+}
+
+model migration {
+  revision           Int       @default(autoincrement()) @id
+  name               String
+  datamodel          String
+  status             String
+  applied            Int
+  rolledBack        Int @map("rolled_back")
+  datamodel_steps    String
+  database_migration String
+  errors             String
+  startedAt         DateTime @map("started_at")
+  finishedAt        DateTime? @map("finished_at")
+
+  @@map("Migration")
+}
+
