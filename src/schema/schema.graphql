@@ -7,12 +7,17 @@ enum Sort {
 
 input EventOrderByInput {
   name: Sort
-  datetime: Sort
+  dateTime: Sort
+}
+
+input ProductionOrderByInput {
+  name: Sort
+  dateTime: Sort
 }
 
 type AuthPayload {
   token: String
-  admin: Admin
+  user: User
 }
 
 type Mutation {
@@ -22,7 +27,7 @@ type Mutation {
 }
 
 type Query {
-  events(
+  eventsAfterDate(
     filter: String
     skip: Int
     take: Int
@@ -34,17 +39,17 @@ type Query {
     filter: String
     skip: Int
     take: Int
-    orderBy: EventOrderByInput
+    orderBy: ProductionOrderByInput
   ): [Production!]!
 }
 
-type Admin {
+type User {
   id: ID!
   name: String!
   email: String!
 }
 
-type TicketProvider {
+type Company {
   id: ID!
   name: String!
   productions: [Production]
@@ -53,20 +58,24 @@ type TicketProvider {
 type Production {
   id: ID!
   name: String!
-  producer: String
+  producer: Producer
   events: [Event]
-  ticketProvider: TicketProvider
+}
+
+type Producer {
+  id: ID!
+  name: String!
+  productions: [Production]
 }
 
 type Event {
   id: ID!
   name: String
+  dateTime: DateTime
+  maxAdmission: Int
   production: Production!
   venue: Venue
-  datetime: DateTime
   seats: [Seat]
-  maxAdmission: Int
-  ticketProvider: TicketProvider
 }
 
 type Venue {

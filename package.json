@@ -20,7 +20,6 @@
     "express": "^4.17.1",
     "graphql": "^15.3.0",
     "graphql-import-node": "0.0.4",
-    "http": "0.0.1-security",
     "jsonwebtoken": "^8.5.1"
   },
   "devDependencies": {

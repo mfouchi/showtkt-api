@@ -7,95 +7,98 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model admin {
-  email    String @unique
-  id       Int    @default(autoincrement()) @id
-  name     String
-  password String
+model User {
+  id        Int    @default(autoincrement()) @id
+  name      String
+  email     String   @unique
+  password  String
+  roleId    Int?
+  role      Role?     @relation(fields: [roleId], references: [id])
+
 }
 
-model event {
-  id                Int             @default(autoincrement()) @id
-  name              String?
-  maxAdmission     Int? @map("max_admission")
-  datetime          DateTime?
-  venueId          Int? @map("venue_id")
-  productionId     Int? @map("production_id")
-  ticketproviderId Int? @map("ticketprovider_id")
-  production        production?     @relation(fields: [productionId], references: [id])
-  ticketprovider    ticketprovider? @relation(fields: [ticketproviderId], references: [id])
-  venue             venue?          @relation(fields: [venueId], references: [id])
-  seat              seat[]
-
-  @@index([productionId], name: "fkTbleventtblproductionidx")
-  @@index([ticketproviderId], name: "fkTbleventtblticketprovider1idx")
-  @@index([venueId], name: "fkTbleventtblvenue1idx")
+model Role {
+  id Int        @default(autoincrement()) @id
+  name   String
 }
 
-model producer {
-  id         Int          @default(autoincrement()) @id
-  name       String?
-  production production[]
-}
-
-model production {
-  id          Int       @default(autoincrement()) @id
+model Company {
+  id          Int          @default(autoincrement()) @id
   name        String?
-  producerId Int? @map("producer_id")
-  producer    producer? @relation(fields: [producerId], references: [id])
-  events       event[]
-
-  @@index([producerId], name: "fkTblproductiontblproducer2idx")
+  Producers   Producer[]
+  Productions Production[]
+  Events      Event[]
+  Venues      Venue[]      @relation(references: [id])
 }
 
-model seat {
-  id       Int     @default(autoincrement()) @id
-  section  String?
-  row      String?
-  number   String?
-  level    String?
-  status   Int?
-  eventId Int? @map("event_id")
-  event    event?  @relation(fields: [eventId], references: [id])
+model Event {
+  id       Int         @default(autoincrement()) @id
+  name          String?
+  maxAdmission  Int?
+  dateTime      DateTime
+  venueId       Int
+  productionId  Int
+  companyId     Int
+  Company       Company    @relation(fields: [companyId], references: [id])
+  Production    Production @relation(fields: [productionId], references: [id])
+  Venue         Venue      @relation(fields: [venueId], references: [id])
+  Seats         Seat[]
 
-  @@index([eventId], name: "fkTblseattblevent1idx")
+  @@index([productionId], name: "fk_event_production_idx")
+  @@index([companyId], name: "fk_event_ticketprovider_idx")
+  @@index([venueId], name: "fk_event_venue_idx")
 }
 
-model seatingchart {
-  id       Int     @default(autoincrement()) @id
-  name     String?
-  venueId Int? @map("venue_id")
-  venue    venue?  @relation(fields: [venueId], references: [id])
+model Producer {
+  id          Int          @default(autoincrement()) @id
+  name        String
+  companyId   Int
+  Company     Company      @relation(fields: [companyId], references: [id])
+  Productions Production[]
 
-  @@index([venueId], name: "fkTblseatingcharttblvenue1idx")
+  @@index([companyId], name: "fk_producer_company_idx")
 }
 
-model ticketprovider {
-  id    Int     @default(autoincrement()) @id
-  name  String?
-  event event[]
+model Production {
+  id           Int       @default(autoincrement()) @id
+  name         String
+  producerId   Int
+  companyId    Int
+  Company      Company   @relation(fields: [companyId], references: [id])
+  Producer     Producer  @relation(fields: [producerId], references: [id])
+  Events       Event[]
+
+  @@index([companyId], name: "fk_production_company_idx")
+  @@index([producerId], name: "fk_production_producer_idx")
 }
 
-model venue {
-  id           Int            @default(autoincrement()) @id
-  name         String?
-  event        event[]
-  seatingchart seatingchart[]
+model Venue {
+  id            Int            @default(autoincrement()) @id
+  name          String
+  Events        Event[]
+  SeatingCharts SeatingChart[]
+  Companies     Company[]      @relation(references: [id])
 }
 
-model migration {
-  revision           Int       @default(autoincrement()) @id
-  name               String
-  datamodel          String
-  status             String
-  applied            Int
-  rolledBack        Int @map("rolled_back")
-  datamodel_steps    String
-  database_migration String
-  errors             String
-  startedAt         DateTime @map("started_at")
-  finishedAt        DateTime? @map("finished_at")
+model Seat {
+  id      Int     @default(autoincrement()) @id
+  section String?
+  row     String?
+  number  String?
+  level   String?
+  status  Int?
+  eventId Int?
+  Event   Event?  @relation(fields: [eventId], references: [id])
 
-  @@map("Migration")
+  @@index([eventId], name: "fk_seat_event_idx")
+}
+
+model SeatingChart {
+  id             Int     @default(autoincrement()) @id
+  name           String
+  venueId        Int?
+  Venue          Venue?  @relation(fields: [venueId], references: [id])
+
+  @@index([venueId], name: "fk_seatingchart_venue_idx")
 }
 

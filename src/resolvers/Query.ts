@@ -1,11 +1,13 @@
 import { Context } from '../context';
 
 async function event(parent: any, args: any, ctx: Context) {
-  return await ctx.prisma.event.findOne({ where: { id: +args.id } });
+  return await ctx.prisma.event.findOne({
+    where: { id: Number(args.id) },
+  });
 }
 
-async function events(_parent: any, args: any, ctx: Context) {
-  const where = args.filter ? { name: { contains: args.filter } } : {};
+async function eventsAfterDate(_parent: any, args: any, ctx: Context) {
+  const where = args.filter ? { dateTime: { gte: args.filter } } : {};
   const events = await ctx.prisma.event.findMany({
     where,
     skip: args.skip,
@@ -16,24 +18,25 @@ async function events(_parent: any, args: any, ctx: Context) {
 }
 
 async function production(_parent: any, args: any, ctx: Context) {
-  return await ctx.prisma.production.findOne({ where: { id: +args.id } });
+  return await ctx.prisma.production.findOne({
+    where: { id: Number(args.id) },
+  });
 }
 
-async function productions(_parent: any, args: any, ctx: Context) {
+async function productions(_parent, args, ctx) {
   const where = args.filter ? { name: { contains: args.filter } } : {};
   const productions = await ctx.prisma.production.findMany({
     where,
     skip: args.skip,
     take: args.take,
     orderBy: args.orderBy,
-    include: { events: true },
   });
   return productions;
 }
 
 module.exports = {
   event,
-  events,
+  eventsAfterDate,
   production,
   productions,
 };

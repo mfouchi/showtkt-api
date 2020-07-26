@@ -35,23 +35,28 @@ The schema that specifies the API operations of the GraphQL server is defined in
 
 Feel free to adjust any operation by adding or removing fields. The GraphQL Playground helps you with its auto-completion and query validation features.
 
-### Retrieve all current productions and their event dates
+### Retrieve all events on or after a given date sorted by date
 
 ```graphql
-query {
-  productions {
+{
+  eventsAfterDate(
+    skip: 0
+    take: 10
+    orderBy: { dateTime: asc }
+    filter: "2020-03-08T00:00:00.000Z"
+  ) {
     id
     name
-    ticketProvider {
-      name
-    }
-    events {
+    dateTime
+    maxAdmission
+
+    production {
       id
       name
-      datetime
-      ticketProvider {
-        name
-      }
+    }
+    venue {
+      id
+      name
     }
   }
 }
@@ -61,7 +66,30 @@ query {
 
 Evolving the application typically requires four subsequent steps:
 
-1. Migrating the database schema using SQL
-2. Updating your Prisma schema by introspecting the database with `prisma introspect`
-3. Generating Prisma Client to match the new database schema with `prisma generate`
+### Schema-First (preferred, but experimental)
+
+1. Update the SDL [`./prisma/schema.prisma`](./prisma/schema.prisma)
+2. Update the database by migrating the SDL with
+
+   `prisma migrate save --experimental`  
+   `prisma migrate up --experimental`
+
+3. Generate Prisma Client to match the new database schema with `prisma generate`
 4. Use the updated Prisma Client in your application code
+
+### Database-First:
+
+This method will overwrite changes to the schema (like making list objects plural (ie: events or productions))
+
+1. Migrate the database schema using SQL
+2. Update your Prisma schema by introspecting the database with `prisma introspect`
+3. Generate Prisma Client to match the new database schema with `prisma generate`
+4. Use the updated Prisma Client in your application code
+
+## Seeding the database
+
+Edit data in [`./prisma/seed.ts`](./prisma/seed.ts)
+
+Then run:
+
+`ts-node ./prisma/seed'

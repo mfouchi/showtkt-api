@@ -3,51 +3,54 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { APP_SECRET, getUserId } = require('../utils');
 
-async function createEvent(_parent: any, args: any, ctx: Context) {
+async function createEvent(_parent, args, ctx: Context) {
   const userId = getUserId(ctx);
 
   return await ctx.prisma.event.create({
     data: {
       name: args.name,
-      max_admission: args.maxAdmission,
-      datetime: new Date(args.datetime),
+      maxAdmission: args.maxAdmission,
+      dateTime: new Date(args.dateTime),
+      Company: { connect: { id: args.companyId } },
+      Production: { connect: { id: args.productionId } },
+      Venue: { connect: { id: args.venueId } },
     },
   });
 }
 
-async function signup(_parent: any, args: any, ctx: Context) {
+async function signup(_parent, args, ctx: Context) {
   const password = await bcrypt.hash(args.password, 10);
 
-  const admin = await ctx.prisma.admin.create({
+  const user = await ctx.prisma.user.create({
     data: { ...args, password },
   });
 
-  const token = jwt.sign({ userId: admin.id }, APP_SECRET);
+  const token = jwt.sign({ userId: user.id }, APP_SECRET);
 
   return {
     token,
-    admin,
+    user,
   };
 }
 
-async function login(_parent: any, args: any, ctx: Context) {
-  const admin = await ctx.prisma.admin.findOne({
+async function login(_parent, args, ctx: Context) {
+  const user = await ctx.prisma.user.findOne({
     where: { email: args.email },
   });
-  if (!admin) {
+  if (!user) {
     throw new Error('No such user found');
   }
 
-  const valid = await bcrypt.compare(args.password, admin.password);
+  const valid = await bcrypt.compare(args.password, user.password);
   if (!valid) {
     throw new Error('Invalid password');
   }
 
-  const token = jwt.sign({ userId: admin.id }, APP_SECRET);
+  const token = jwt.sign({ userId: user.id }, APP_SECRET);
 
   return {
     token,
-    admin,
+    user,
   };
 }
 
