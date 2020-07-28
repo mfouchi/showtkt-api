@@ -38,25 +38,49 @@ Feel free to adjust any operation by adding or removing fields. The GraphQL Play
 ### Retrieve all events on or after a given date sorted by date
 
 ```graphql
-{
-  eventsAfterDate(
-    skip: 0
-    take: 10
+query events {
+  events(
+    where: { dateTime: { gte: "2020-03-09T00:00:00.000Z" } }
     orderBy: { dateTime: asc }
-    filter: "2020-03-08T00:00:00.000Z"
   ) {
     id
     name
     dateTime
-    maxAdmission
+  }
+}
+```
 
-    production {
-      id
-      name
+### Add a new Production with Events, using existing Company, Producer and Venue
+
+```graphql
+mutation createOneProduction {
+  createOneProduction(
+    data: {
+      name: "Cinderella"
+      Company: { connect: { id: 1 } }
+      Producer: { connect: { id: 1 } }
+      Events: {
+        create: [
+          {
+            Company: { connect: { id: 1 } }
+            dateTime: "2020-06-01T19:30:00Z"
+            Venue: { connect: { id: 1 } }
+          }
+          {
+            Company: { connect: { id: 1 } }
+            name: "Cinderella - Field trip performance"
+            dateTime: "2020-06-02T19:30:00Z"
+            Venue: { connect: { id: 1 } }
+          }
+        ]
+      }
     }
-    venue {
-      id
+  ) {
+    id
+    name
+    Events {
       name
+      dateTime
     }
   }
 }
@@ -76,6 +100,9 @@ Evolving the application typically requires four subsequent steps:
 
 3. Generate Prisma Client to match the new database schema with `prisma generate`
 4. Use the updated Prisma Client in your application code
+5. The cli tool (paljs/create-nexus-type) will auto-generate the nexus schema code files from the Prisma schema (\*\* This will overwrite the schema code files in /api/graphql, so don't use these files to add custom code)
+
+`npx cnt --mq -c -f -o --outDir ./api/graphql`
 
 ### Database-First:
 
