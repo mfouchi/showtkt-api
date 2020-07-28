@@ -5,12 +5,11 @@ enum Sort {
   desc
 }
 
-input EventOrderByInput {
+input NameOrderByInput {
   name: Sort
-  dateTime: Sort
 }
 
-input ProductionOrderByInput {
+input EventOrderByInput {
   name: Sort
   dateTime: Sort
 }
@@ -27,19 +26,26 @@ type Mutation {
 }
 
 type Query {
+  company(id: ID!): Company
+
+  companies(skip: Int, take: Int, orderBy: NameOrderByInput): [Company!]
+
   eventsAfterDate(
     filter: String
     skip: Int
     take: Int
     orderBy: EventOrderByInput
   ): [Event!]!
+
   event(id: ID!): Event
+
   production(id: ID!): Production
+
   productions(
     filter: String
     skip: Int
     take: Int
-    orderBy: ProductionOrderByInput
+    orderBy: NameOrderByInput
   ): [Production!]!
 }
 

@@ -1,5 +1,20 @@
 import { Context } from '../context';
 
+async function company(parent: any, args: any, ctx: Context) {
+  return await ctx.prisma.company.findOne({
+    where: { id: Number(args.id) },
+  });
+}
+
+async function companies(_parent: any, args: any, ctx: Context) {
+  const events = await ctx.prisma.company.findMany({
+    skip: args.skip,
+    take: args.take,
+    orderBy: args.orderBy,
+  });
+  return events;
+}
+
 async function event(parent: any, args: any, ctx: Context) {
   return await ctx.prisma.event.findOne({
     where: { id: Number(args.id) },
@@ -35,6 +50,8 @@ async function productions(_parent, args, ctx) {
 }
 
 module.exports = {
+  company,
+  companies,
   event,
   eventsAfterDate,
   production,
