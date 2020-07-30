@@ -12,19 +12,23 @@ type BatchPayload {
 }
 
 type Company {
+  city: String
   Events(after: EventWhereUniqueInput, before: EventWhereUniqueInput, first: Int, last: Int): [Event!]!
   id: Int!
-  name: String
+  name: String!
   Producers(after: ProducerWhereUniqueInput, before: ProducerWhereUniqueInput, first: Int, last: Int): [Producer!]!
   Productions(after: ProductionWhereUniqueInput, before: ProductionWhereUniqueInput, first: Int, last: Int): [Production!]!
+  state: String
   Venues(after: VenueWhereUniqueInput, before: VenueWhereUniqueInput, first: Int, last: Int): [Venue!]!
 }
 
 input CompanyCreateInput {
+  city: String
   Events: EventCreateManyWithoutCompanyInput
-  name: String
+  name: String!
   Producers: ProducerCreateManyWithoutCompanyInput
   Productions: ProductionCreateManyWithoutCompanyInput
+  state: String
   User: UserCreateManyWithoutCompanyInput
   Venues: VenueCreateManyWithoutCompaniesInput
 }
@@ -55,42 +59,52 @@ input CompanyCreateOneWithoutUserInput {
 }
 
 input CompanyCreateWithoutEventsInput {
-  name: String
+  city: String
+  name: String!
   Producers: ProducerCreateManyWithoutCompanyInput
   Productions: ProductionCreateManyWithoutCompanyInput
+  state: String
   User: UserCreateManyWithoutCompanyInput
   Venues: VenueCreateManyWithoutCompaniesInput
 }
 
 input CompanyCreateWithoutProducersInput {
+  city: String
   Events: EventCreateManyWithoutCompanyInput
-  name: String
+  name: String!
   Productions: ProductionCreateManyWithoutCompanyInput
+  state: String
   User: UserCreateManyWithoutCompanyInput
   Venues: VenueCreateManyWithoutCompaniesInput
 }
 
 input CompanyCreateWithoutProductionsInput {
+  city: String
   Events: EventCreateManyWithoutCompanyInput
-  name: String
+  name: String!
   Producers: ProducerCreateManyWithoutCompanyInput
+  state: String
   User: UserCreateManyWithoutCompanyInput
   Venues: VenueCreateManyWithoutCompaniesInput
 }
 
 input CompanyCreateWithoutUserInput {
+  city: String
   Events: EventCreateManyWithoutCompanyInput
-  name: String
+  name: String!
   Producers: ProducerCreateManyWithoutCompanyInput
   Productions: ProductionCreateManyWithoutCompanyInput
+  state: String
   Venues: VenueCreateManyWithoutCompaniesInput
 }
 
 input CompanyCreateWithoutVenuesInput {
+  city: String
   Events: EventCreateManyWithoutCompanyInput
-  name: String
+  name: String!
   Producers: ProducerCreateManyWithoutCompanyInput
   Productions: ProductionCreateManyWithoutCompanyInput
+  state: String
   User: UserCreateManyWithoutCompanyInput
 }
 
@@ -101,41 +115,51 @@ input CompanyFilter {
 }
 
 input CompanyOrderByInput {
+  city: OrderByArg
   id: OrderByArg
   name: OrderByArg
+  state: OrderByArg
 }
 
 input CompanyScalarWhereInput {
   AND: [CompanyScalarWhereInput!]
+  city: NullableStringFilter
   Events: EventFilter
   id: IntFilter
-  name: NullableStringFilter
+  name: StringFilter
   NOT: [CompanyScalarWhereInput!]
   OR: [CompanyScalarWhereInput!]
   Producers: ProducerFilter
   Productions: ProductionFilter
+  state: NullableStringFilter
   User: UserFilter
   Venues: VenueFilter
 }
 
 input CompanyUpdateInput {
+  city: String
   Events: EventUpdateManyWithoutCompanyInput
   id: Int
   name: String
   Producers: ProducerUpdateManyWithoutCompanyInput
   Productions: ProductionUpdateManyWithoutCompanyInput
+  state: String
   User: UserUpdateManyWithoutCompanyInput
   Venues: VenueUpdateManyWithoutCompaniesInput
 }
 
 input CompanyUpdateManyDataInput {
+  city: String
   id: Int
   name: String
+  state: String
 }
 
 input CompanyUpdateManyMutationInput {
+  city: String
   id: Int
   name: String
+  state: String
 }
 
 input CompanyUpdateManyWithoutVenuesInput {
@@ -184,47 +208,57 @@ input CompanyUpdateOneRequiredWithoutUserInput {
 }
 
 input CompanyUpdateWithoutEventsDataInput {
+  city: String
   id: Int
   name: String
   Producers: ProducerUpdateManyWithoutCompanyInput
   Productions: ProductionUpdateManyWithoutCompanyInput
+  state: String
   User: UserUpdateManyWithoutCompanyInput
   Venues: VenueUpdateManyWithoutCompaniesInput
 }
 
 input CompanyUpdateWithoutProducersDataInput {
+  city: String
   Events: EventUpdateManyWithoutCompanyInput
   id: Int
   name: String
   Productions: ProductionUpdateManyWithoutCompanyInput
+  state: String
   User: UserUpdateManyWithoutCompanyInput
   Venues: VenueUpdateManyWithoutCompaniesInput
 }
 
 input CompanyUpdateWithoutProductionsDataInput {
+  city: String
   Events: EventUpdateManyWithoutCompanyInput
   id: Int
   name: String
   Producers: ProducerUpdateManyWithoutCompanyInput
+  state: String
   User: UserUpdateManyWithoutCompanyInput
   Venues: VenueUpdateManyWithoutCompaniesInput
 }
 
 input CompanyUpdateWithoutUserDataInput {
+  city: String
   Events: EventUpdateManyWithoutCompanyInput
   id: Int
   name: String
   Producers: ProducerUpdateManyWithoutCompanyInput
   Productions: ProductionUpdateManyWithoutCompanyInput
+  state: String
   Venues: VenueUpdateManyWithoutCompaniesInput
 }
 
 input CompanyUpdateWithoutVenuesDataInput {
+  city: String
   Events: EventUpdateManyWithoutCompanyInput
   id: Int
   name: String
   Producers: ProducerUpdateManyWithoutCompanyInput
   Productions: ProductionUpdateManyWithoutCompanyInput
+  state: String
   User: UserUpdateManyWithoutCompanyInput
 }
 
@@ -261,13 +295,15 @@ input CompanyUpsertWithWhereUniqueWithoutVenuesInput {
 
 input CompanyWhereInput {
   AND: [CompanyWhereInput!]
+  city: NullableStringFilter
   Events: EventFilter
   id: IntFilter
-  name: NullableStringFilter
+  name: StringFilter
   NOT: [CompanyWhereInput!]
   OR: [CompanyWhereInput!]
   Producers: ProducerFilter
   Productions: ProductionFilter
+  state: NullableStringFilter
   User: UserFilter
   Venues: VenueFilter
 }

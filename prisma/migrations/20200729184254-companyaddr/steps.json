@@ -1,0 +1,25 @@
+{
+  "version": "0.3.14-fixed",
+  "steps": [
+    {
+      "tag": "CreateField",
+      "model": "Company",
+      "field": "city",
+      "type": "String",
+      "arity": "Optional"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Company",
+      "field": "state",
+      "type": "String",
+      "arity": "Optional"
+    },
+    {
+      "tag": "UpdateField",
+      "model": "Company",
+      "field": "name",
+      "arity": "Required"
+    }
+  ]
+}
