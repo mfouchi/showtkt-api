@@ -6,6 +6,7 @@
     "strict": true,
     "rootDir": "api",
     "noEmit": true,
+    "esModuleInterop": true,
     "plugins": [
       {
         "name": "nexus/typescript-language-service"
