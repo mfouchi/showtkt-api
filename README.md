@@ -104,6 +104,10 @@ Evolving the application typically requires four subsequent steps:
 
 `npx cnt --mq -c -f -o --outDir ./api/graphql/models`
 
+6. This will generate types to use in the Angular project
+
+`npx create-types --outDir api/generated`
+
 ### Database-First:
 
 This method will overwrite changes to the schema (like making list objects plural (ie: events or productions))
