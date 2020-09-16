@@ -1,5 +1,7 @@
 # ShowTkt GraphQL API using Apollo Server and Prisma
 
+I created this GraphQL API as a way to experiment with Apollo GraphQL, Prisma, and Nexus.
+
 ## How to use
 
 ### 1. Download repo & install dependencies
@@ -24,7 +26,7 @@ Note that this also generates Prisma Client JS into `node_modules/@prisma/client
 Launch your GraphQL server with this command:
 
 ```
-npm run dev
+npm nexus dev
 ```
 
 Navigate to [http://localhost:4000](http://localhost:4000) in your browser to explore the API in a GraphQL Playground.
