@@ -26,7 +26,7 @@ schema.extendType({
         where: 'CompanyWhereInput',
       },
       async resolve(_root, args, ctx) {
-        return ctx.db.company.count(args);
+        return ctx.db.company.count(); //(args);
       },
     });
   },

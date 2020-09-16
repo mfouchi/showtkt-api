@@ -4,6 +4,8 @@ I created this GraphQL API as a way to experiment with Apollo GraphQL, Prisma, a
 
 ## How to use
 
+NOTE: When developing this on my Windows machine, I had to use a WSL virtual machine, as nexus was not working properly in a windows environment yet. (See [https://docs.microsoft.com/en-us/windows/wsl/install-win10]https://docs.microsoft.com/en-us/windows/wsl/install-win10)
+
 ### 1. Download repo & install dependencies
 
 Clone this repository:
